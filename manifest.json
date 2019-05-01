@@ -1,0 +1,32 @@
+{
+    "manifest_version": 2,
+    "name": "Azure Commit Copy",
+    "version": "0.0.1",
+
+    "description": "Copy a Git commit ID, build version, and their Azure URLs with a single click!",
+
+    "page_action": {
+        "default_icon": "icons/copy.png",
+        "default_title": "Azure Commit Copy"
+    },
+
+    "background": {
+        "scripts": ["constants.js", "background.js"],
+        "persistent": false
+    },
+
+    "sandbox": {
+        "pages": ["sandbox.html"]
+    },
+
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": false
+    },
+
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "storage"
+    ]
+}

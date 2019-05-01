@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="options.css">
+    </head>
+    <body>
+        <div>
+            <h4>Build format string</h4>
+            <p>
+                The format string that will be used to generate a string for each build the commit is associated with. Create a format string using the ES6
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables
+                you have access to are:
+                
+                <ul>
+                    <li><b>build.name:</b> the name of the Azure build</li>
+                    <li><b>build.id:</b> the ID of the Azure build</li>
+                    <li><b>build.url:</b> the URL of the Azure build</li>
+                </ul>
+            </p>
+            <textarea id="build-format-string"></textarea>
+        </div>
+
+        <div>
+            <h4>Format string</h4>
+            <p>
+                The format string that will be used to generate a string for the commit. Create a format string using the ES6
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables you
+                have access to are:
+                
+                <ul>
+                    <li><b>commit.hash:</b> the SHA1 hash of the commit</li>
+                    <li><b>commit.url:</b> the URl of the commit</li>
+                    <li><b>buildString:</b> a string made up of the concatenation of the build strings</li>
+                </ul>
+            </p>
+            <textarea id="format-string"></textarea>
+        </div>
+
+        <div>
+            <button id="reset">Reset</button>
+            <button id="save">Save</button>
+            <span id="save-banner" hidden=true>Options saved!</span>
+        </div>
+
+        <script src="constants.js"></script>
+        <script src="options.js"></script>
+    </body>
+</html>
