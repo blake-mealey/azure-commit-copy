@@ -41,19 +41,15 @@ function formatStringInSandbox(context, callback) {
     });
 }
 
-function processUrls(commitUrl, buildUrls) {
+function processUrls(commitUrl, builds) {
     const commit = {
         url: commitUrl,
         hash: new URL(commitUrl).pathname.split('/').reverse().find((part) => !!part)
     };
 
-    const builds = buildUrls.map((buildUrl) => {
-        return {
-            name: 'BUILD_NAME',
-            url: buildUrl,
-            id: new URL(buildUrl).searchParams.get('buildId')
-        };
-    });
+    for (const build of builds) {
+        build.id = new URL(build.url).searchParams.get('buildId')
+    }
 
     formatStringInSandbox({
         commit,
@@ -81,14 +77,14 @@ chrome.pageAction.onClicked.addListener((tab) => {
                     result;`
         }, (result) => {
             result = result[0];
-            processUrls(result.commitUrl, [tab.url]);
+            processUrls(result.commitUrl, [{url: tab.url, name: 'BUILD_NAME'}]);
         });
     } else if (isCommitPage(tab.url)) {
         chrome.tabs.executeScript(null, {
             file: 'getBuildUrls.js'
         }, (result) => {
             result = result[0];
-            processUrls(tab.url, result.buildUrls);
+            processUrls(tab.url, result.builds);
         });
     }
 });
