@@ -23,9 +23,9 @@ function saveOptions() {
     }, () => {
         console.log('saved settings');
         const saveBanner = document.getElementById('save-banner');
-        saveBanner.hidden = false;
+        saveBanner.classList.remove('hidden');
         setTimeout(() => {
-            saveBanner.hidden = true;
+            saveBanner.classList.add('hidden');
         }, 1000);
     });
 }

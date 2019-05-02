@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     function interval(callback, timeout = 500, maxTries = 10) {
         return new Promise((resolve, reject) => {
             let tries = 0;

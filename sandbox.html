@@ -1,28 +1,6 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <script>
-            'strict'
-            window.addEventListener('message', (event) => {
-                const context = event.data.context;
-
-                // Load context into current scope
-                const commit = context.commit;
-                const builds = context.builds;
-                const pullRequest = context.pullRequest;
-                const branch = context.branch
-
-                const buildFormatString = event.data.buildFormatString;
-                const buildsString = builds.map((build) => eval(`\`${buildFormatString}\`;`)).join('');
-
-                const formatString = event.data.formatString;
-                const result = eval(`\`${formatString}\`;`);
-
-                const message = {
-                    result
-                };
-                event.source.postMessage(message, event.origin);
-            });
-        </script>
+        <script src="sandbox.js"></script>
     </body>
 </html>
