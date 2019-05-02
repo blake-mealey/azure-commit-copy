@@ -1,19 +1,23 @@
 (function() {
-    function interval(callback) {
-        return new Promise((resolve) => {
-            const duration = 500;
-
+    function interval(callback, timeout = 500, maxTries = 10) {
+        return new Promise((resolve, reject) => {
+            let tries = 0;
             const runCallback = function (intervalId) {
                 const result = callback();
                 if (result) {
                     resolve(result);
                     clearInterval(intervalId);
                 }
+                
+                if (++tries === maxTries) {
+                    reject(`'callback' did not return truthy after ${tries} tries at intervals of ${timeout}ms.`);
+                    clearInterval(intervalId);
+                }
             };
 
             const intervalId = setInterval(() => {
                 runCallback(intervalId);
-            }, duration);
+            }, timeout);
             runCallback(intervalId);
         });
     }
@@ -22,8 +26,8 @@
         return !!document.querySelector(elementSelector);
     }
 
-    async function waitUntilElementExists(elementSelector) {
-        return await interval(() => doesElementExist(elementSelector));
+    async function getElementAsync(elementSelector) {
+        return await interval(() => document.querySelector(elementSelector));
     }
 
     async function openPopup(buttonSelector, popupSelector) {
@@ -52,16 +56,16 @@
                 };
             });
 
-        await openPopup('.stat-badge', '.pullrequests-flyout-content');
-        await waitUntilElementExists('.pullrequest-list .card-details');
-        const pullRequestLinks = Array.from(document.querySelectorAll('.pullrequest-list .card-details .ms-Link.primary-text'));
+        const branchBadge = await getElementAsync('.branch-stats-badge');
+        result.branch = {
+            url: branchBadge.href,
+            name: branchBadge.querySelector('.stat-text').textContent
+        };
 
-        result.pullRequests = pullRequestLinks
-            .map((link) => {
-                return {
-                    url: link.href
-                };
-            });
+        const prBadge = await getElementAsync('.pr-for-branch-badge');
+        result.pullRequest = {
+            url: prBadge.href
+        };
 
         chrome.runtime.sendMessage(null, {
             request: 'returnBuildUrls',

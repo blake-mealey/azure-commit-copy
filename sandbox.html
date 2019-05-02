@@ -10,6 +10,7 @@
                 const commit = context.commit;
                 const builds = context.builds;
                 const pullRequest = context.pullRequest;
+                const branch = context.branch
 
                 const buildFormatString = event.data.buildFormatString;
                 const buildsString = builds.map((build) => eval(`\`${buildFormatString}\`;`)).join('');

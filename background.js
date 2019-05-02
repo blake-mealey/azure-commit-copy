@@ -45,7 +45,7 @@ function getPathEnd(url) {
     return new URL(url).pathname.split('/').reverse().find((x) => !!x);
 }
 
-function processUrls(commitUrl, builds, pullRequests) {
+function processUrls(commitUrl, builds, pullRequest, branch) {
     const commit = {
         url: commitUrl,
         hash: getPathEnd(commitUrl)
@@ -55,14 +55,13 @@ function processUrls(commitUrl, builds, pullRequests) {
         build.id = new URL(build.url).searchParams.get('buildId')
     }
 
-    for (const pullRequest of pullRequests) {
-        pullRequest.id = getPathEnd(pullRequest.url);
-    }
+    pullRequest.id = getPathEnd(pullRequest.url);
 
     formatStringInSandbox({
         commit,
         builds,
-        pullRequest: pullRequests[0]
+        pullRequest,
+        branch
     }, (result) => {
         console.log(result);
         copyToClipboard(result);
@@ -99,7 +98,7 @@ chrome.pageAction.onClicked.addListener((tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender) => {
     if (message.request === 'returnBuildUrls') {
-        processUrls(sender.tab.url, message.result.builds, message.result.pullRequests);
+        processUrls(sender.tab.url, message.result.builds, message.result.pullRequest, message.result.branch);
     }
 });
 
