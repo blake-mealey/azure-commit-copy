@@ -1,4 +1,5 @@
 const DEFAULT_FORMAT_STRING = 'Committed:\n' +
+'* Pull Request: [${pullRequest.id}|${pullRequest.url}]' +
 '* Commit: [${commit.hash}|${commit.url}]\n' +
 '${buildsString}';
 

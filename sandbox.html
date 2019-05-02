@@ -9,6 +9,7 @@
                 // Load context into current scope
                 const commit = context.commit;
                 const builds = context.builds;
+                const pullRequest = context.pullRequest;
 
                 const buildFormatString = event.data.buildFormatString;
                 const buildsString = builds.map((build) => eval(`\`${buildFormatString}\`;`)).join('');
@@ -24,7 +25,3 @@
         </script>
     </body>
 </html>
-Committed:
-* Commit: [0af369b660182647a54cbc6fd16e32a98ddb34b2|https://nureva.visualstudio.com/Watson/_git/311892e3-8738-45e3-877c-2aff9bccc608/commit/0af369b660182647a54cbc6fd16e32a98ddb34b2/]
-* BUILD_NAME: [88818|https://nureva.visualstudio.com/Watson/_build%2Fresults?buildId=88818&_a=summary]
-* BUILD_NAME: [null|https://nureva.visualstudio.com/d4853503-5a26-4f1a-a2c6-f0a4d0b7a90a/_release?_a=release-summary&releaseId=21388]
