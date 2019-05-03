@@ -3,18 +3,6 @@ textarea {
     resize: none;
 }
 
-main > section {
-    padding-top: 80px;
-}
-
 .hidden {
     display: none;
-}
-
-.format-box {
-    margin: 0;
-}
-
-.format-box .half {
-    width: calc(50% - 3px);
 }

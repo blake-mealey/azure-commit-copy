@@ -3,127 +3,134 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 
-        <link rel="stylesheet" href="https://unpkg.com/picnic">
+        <link rel="stylesheet" href="https://unpkg.com/chota@latest">
         <link rel="stylesheet" type="text/css" href="options.css">
     </head>
     <body>
-        <nav class="demo">
-            <a href="#" class="brand">
-                <img class="logo" src="/icons/copy.png" />
-                <span>Azure Commit Copy</span>
-            </a>
-        </nav>
+        <div class="container">
+            <nav class="nav">
+                <div class="nav-left">
+                    <a class="brand">Azure Commit Copy</a>
+                </div>
+            </nav>
 
-        <main>
-            <section class="flex five center">
-                <article class="full four-fifth-1000">
-                    <article class="card">
-                        <header>
-                            <h3>Build format string</h3>
-                        </header>
+            <main>
+                <article class="card">
+                    <header>
+                        <h4>Build format string</h4>
+                    </header>
 
-                        <section>
-                            The format string that will be used to generate a string for each build the commit is associated with. Create a format string using the ES6
-                            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables
-                            in scope are:
-                        </section>
+                    <section>
+                        The format string that will be used to generate a string for each build the commit is associated with. Create a format string using the ES6
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables
+                        in scope are:
+                    </section>
 
-                        <section>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Variable name</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>build.name</td>
-                                        <td>The name of the Azure build</td>
-                                    </tr>
-                                    <tr>
-                                        <td>build.id</td>
-                                        <td>The ID of the Azure build</td>
-                                    </tr>
-                                    <tr>
-                                        <td>build.url</td>
-                                        <td>The URL of the Azure build</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </section>
+                    <section>
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th>Variable name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>build.name</td>
+                                    <td>The name of the Azure build</td>
+                                </tr>
+                                <tr>
+                                    <td>build.id</td>
+                                    <td>The ID of the Azure build</td>
+                                </tr>
+                                <tr>
+                                    <td>build.url</td>
+                                    <td>The URL of the Azure build</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
 
-                        <section class="format-box flex full grow center">
-                            <textarea class="half" id="build-format-string"></textarea>
-                            <textarea class="half" disabled></textarea>
-                        </section>
-                    </article>
+                    <hr>
 
-                    <article class="card">
-                        <header>
-                            <h3>Format string</h3>
-                        </header>
-
-                        <section>
-                            The format string that will be used to generate a string for the commit. Create a format string using the ES6
-                            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables in scope are:
-                        </section>
-
-                        <section>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Variable name</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>branch.name</td>
-                                        <td>The name of the branch</td>
-                                    </tr>
-                                    <tr>
-                                        <td>branch.url</td>
-                                        <td>The URL of the branch</td>
-                                    </tr>
-                                    <tr>
-                                        <td>pullRequest.id</td>
-                                        <td>The ID of the Azure pull request</td>
-                                    </tr>
-                                    <tr>
-                                        <td>pullRequest.url</td>
-                                        <td>The URL of Azure pull request</td>
-                                    </tr>
-                                    <tr>
-                                        <td>commit.hash</td>
-                                        <td>The SHA1 hash of the commit</td>
-                                    </tr>
-                                    <tr>
-                                        <td>commit.url</td>
-                                        <td>The URL of the commit</td>
-                                    </tr>
-                                    <tr>
-                                        <td>buildsString</td>
-                                        <td>The string made up of the concatenation of the build strings</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </section>
-
-                        <section class="format-box flex full grow center">
-                            <textarea class="half" id="format-string"></textarea>
-                            <textarea class="half" disabled></textarea>
-                        </section>
-                    </article>
-
-                    <div>
-                        <button id="reset">Reset</button>
-                        <button id="save">Save</button>
-                        <span id="save-banner" class="label success hidden">Options saved!</span>
-                    </div>
+                    <section class="row">
+                        <textarea class="col" id="build-format-string"></textarea>
+                        <textarea class="col" disabled></textarea>
+                    </section>
                 </article>
-            </section>
-        </main>
+
+                <br>
+
+                <article class="card">
+                    <header>
+                        <h4>Format string</h4>
+                    </header>
+
+                    <section>
+                        The format string that will be used to generate a string for the commit. Create a format string using the ES6
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> syntax. The variables in scope are:
+                    </section>
+
+                    <section>
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th>Variable name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>branch.name</td>
+                                    <td>The name of the branch</td>
+                                </tr>
+                                <tr>
+                                    <td>branch.url</td>
+                                    <td>The URL of the branch</td>
+                                </tr>
+                                <tr>
+                                    <td>pullRequest.id</td>
+                                    <td>The ID of the Azure pull request</td>
+                                </tr>
+                                <tr>
+                                    <td>pullRequest.url</td>
+                                    <td>The URL of Azure pull request</td>
+                                </tr>
+                                <tr>
+                                    <td>commit.hash</td>
+                                    <td>The SHA1 hash of the commit</td>
+                                </tr>
+                                <tr>
+                                    <td>commit.url</td>
+                                    <td>The URL of the commit</td>
+                                </tr>
+                                <tr>
+                                    <td>buildsString</td>
+                                    <td>The string made up of the concatenation of the build strings</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <hr>
+
+                    <section class="row">
+                        <textarea class="col" id="format-string"></textarea>
+                        <textarea class="col" disabled></textarea>
+                    </section>
+                </article>
+
+                <br>
+
+                <div>
+                    <button id="reset">Reset</button>
+                    <button id="save">Save</button>
+                    <span id="save-banner" class="label success hidden">Options saved!</span>
+                </div>
+
+                <br>
+            </main>
+        </div>
 
         <script src="constants.js"></script>
         <script src="options.js"></script>
