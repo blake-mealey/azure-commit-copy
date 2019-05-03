@@ -11,7 +11,7 @@
     },
 
     "background": {
-        "scripts": ["constants.js", "background.js"],
+        "page": "background.html",
         "persistent": false
     },
 

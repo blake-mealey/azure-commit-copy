@@ -1,3 +1,5 @@
+import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING } from './constants.js';
+
 function restoreOptions() {
     chrome.storage.sync.get({
         buildFormatString: DEFAULT_BUILD_FORMAT_STRING,
