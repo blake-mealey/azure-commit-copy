@@ -1,4 +1,4 @@
-import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING, BUILD_URL_REGEX, COMMIT_URL_REGEX } from './constants.js';
+import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING, BUILD_URL_REGEX, COMMIT_URL_REGEX } from './modules/constants.js';
 
 function copyToClipboard(text) {
     const input = document.createElement('textarea');
