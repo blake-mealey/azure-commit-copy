@@ -5,19 +5,22 @@
         return new Function(`with(this) { return ${js}; }`).call(context);
     }
 
+    function formatBuildsString(formatString, context) {
+        return context.map(
+            (build) => evalWithContext(`\`${formatString}\``, {build})).join('');
+    }
+
+    function formatCommitString(formatString, context) {
+        return evalWithContext(`\`${formatString}\``, context);
+    }
+
     window.addEventListener('message', (event) => {
-        const context = event.data.context;
-
-        const buildFormatString = event.data.buildFormatString;
-        context.buildsString = context.builds.map(
-            (build) => evalWithContext(`\`${buildFormatString}\``, {build})).join('');
-
-        const formatString = event.data.formatString;
-        const result = evalWithContext(`\`${formatString}\``, context);
-
-        const message = {
-            result
-        };
+        const message = {};
+        if (event.data.type === 'builds') {
+            message.result = formatBuildsString(event.data.formatString, event.data.context);
+        } else if (event.data.type === 'commit') {
+            message.result = formatCommitString(event.data.formatString, event.data.context);
+        }
         event.source.postMessage(message, event.origin);
     });
 })();

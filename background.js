@@ -12,18 +12,15 @@
         document.body.removeChild(input);
     };
 
-    function formatStringInSandbox(context, callback) {
-        const iframe = document.createElement('iframe');
-        iframe.src = 'sandbox.html';
+    async function formatStringInSandbox(type, formatString, context) {
+        return new Promise((resolve) => {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'sandbox.html';
 
-        chrome.storage.sync.get({
-            buildFormatString: DEFAULT_BUILD_FORMAT_STRING,
-            formatString: DEFAULT_FORMAT_STRING
-        }, (items) => {
             iframe.addEventListener('load', () => {
                 const message = {
-                    buildFormatString: items.buildFormatString,
-                    formatString: items.formatString,
+                    type,
+                    formatString,
                     context
                 };
                 iframe.contentWindow.postMessage(message, '*');
@@ -31,14 +28,33 @@
 
             const responseHandler = (event) => {
                 if (event.source !== iframe.contentWindow) { return; }
-                
-                callback(event.data.result);
-        
+
+                resolve(event.data.result);
+
                 window.removeEventListener('message', responseHandler);
             };
             window.addEventListener('message', responseHandler);
-        
+
             document.body.appendChild(iframe);
+        });
+    }
+
+    async function formatStrings(context) {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get({
+                buildFormatString: DEFAULT_BUILD_FORMAT_STRING,
+                formatString: DEFAULT_FORMAT_STRING
+            }, async (items) => {
+                const buildsString = await formatStringInSandbox('builds', items.buildFormatString, context.builds);
+                const result = await formatStringInSandbox('commit', items.formatString, {
+                    branch: context.branch,
+                    pullRequest: context.pullRequest,
+                    commit: context.commit,
+                    buildsString
+                });
+
+                resolve(result);
+            });
         });
     }
 
@@ -46,7 +62,7 @@
         return new URL(url).pathname.split('/').reverse().find((x) => !!x);
     }
 
-    function processUrls(commitUrl, builds, pullRequest, branch) {
+    async function processUrls(commitUrl, builds, pullRequest, branch) {
         const commit = {
             url: commitUrl,
             hash: getPathEnd(commitUrl)
@@ -58,15 +74,15 @@
 
         pullRequest.id = getPathEnd(pullRequest.url);
 
-        formatStringInSandbox({
+        const result = await formatStrings({
             commit,
             builds,
             pullRequest,
             branch
-        }, (result) => {
-            console.log(result);
-            copyToClipboard(result);
         });
+
+        console.log(result);
+        copyToClipboard(result);
     }
 
     function isBuildResultsPage(url) {
