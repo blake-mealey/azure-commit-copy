@@ -5,7 +5,7 @@ export class Formatter {
     }
 
     async formatString(formatString, context) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const iframe = document.createElement('iframe');
             iframe.style.position = 'fixed';
             iframe.style.opacity = 0;
@@ -24,7 +24,11 @@ export class Formatter {
             const responseHandler = (event) => {
                 if (event.source !== iframe.contentWindow) { return; }
 
-                resolve(event.data.result);
+                if (!event.data.error) {
+                    resolve(event.data.result);
+                } else {
+                    reject(event.data.error);
+                }
 
                 window.removeEventListener('message', responseHandler);
                 document.body.removeChild(iframe);

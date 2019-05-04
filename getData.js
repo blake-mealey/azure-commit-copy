@@ -47,10 +47,10 @@
 
     const BUILD_LINK_REGEX = /^(?<name>.+) (?:build) (?<instance>.+) (?<status>\w+)$/;
 
-    async function getResult() {
-        const result = {};
+    async function getData() {
+        const data = {};
 
-        result.commit = {
+        data.commit = {
             url: window.location.href,
             hash: getPathEnd(window.location.href)
         };
@@ -58,7 +58,7 @@
         await openPopup('.status-state', '.status-flyout-content');
         const buildLinks = Array.from(document.querySelectorAll('.status-target-url-link'));
 
-        result.builds = buildLinks
+        data.builds = buildLinks
             .filter((link) => BUILD_LINK_REGEX.test(link.textContent))
             .map((link) => {
                 return {
@@ -69,21 +69,33 @@
             });
 
         const branchBadge = await getElementAsync('.branch-stats-badge');
-        result.branch = {
+        data.branch = {
             url: branchBadge.href,
             name: branchBadge.querySelector('.stat-text').textContent
         };
 
         const prBadge = await getElementAsync('.pr-for-branch-badge');
-        result.pullRequest = {
+        data.pullRequest = {
             id: getPathEnd(prBadge.href),
             url: prBadge.href
         };
 
-        chrome.runtime.sendMessage(null, {
-            request: 'returnData',
-            result
-        });
+        return data;
+    }
+
+    async function getResult() {
+        try {
+            const data = await getData();
+            chrome.runtime.sendMessage(null, {
+                request: 'getDataSuccess',
+                data
+            });
+        } catch (error) {
+            chrome.runtime.sendMessage(null, {
+                request: 'getDataError',
+                error: JSON.parse(JSON.stringify(error))
+            });
+        }
     }
 
     getResult();

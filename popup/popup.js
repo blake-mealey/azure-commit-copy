@@ -27,38 +27,53 @@ const buildsStringFormatter = new Formatter('builds', sandboxPath);
 const commitStringFormatter = new Formatter('commit', sandboxPath);
 
 async function formatStrings(context) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         chrome.storage.sync.get({
             buildFormatString: DEFAULT_BUILD_FORMAT_STRING,
             formatString: DEFAULT_FORMAT_STRING
         }, async (items) => {
-            const buildsString = await buildsStringFormatter.formatString(items.buildFormatString,
-                context.builds);
+            try {
+                const buildsString = await buildsStringFormatter.formatString(items.buildFormatString,
+                    context.builds);
 
-            const result = await commitStringFormatter.formatString(items.formatString, {
-                branch: context.branch,
-                pullRequest: context.pullRequest,
-                commit: context.commit,
-                buildsString
-            });
+                const result = await commitStringFormatter.formatString(items.formatString, {
+                    branch: context.branch,
+                    pullRequest: context.pullRequest,
+                    commit: context.commit,
+                    buildsString
+                });
 
-            resolve(result);
+                resolve(result);
+            } catch (error) {
+                reject(error);
+            }
         });
     });
 }
 
 async function processData(context) {
-    const result = await formatStrings(context);
+    try {
+        const result = await formatStrings(context);
 
-    updateCopyStatus('Copied!', 'success');
+        updateCopyStatus('Copied!', 'success');
 
-    console.log(result);
-    copyToClipboard(result);
+        console.log(result);
+        copyToClipboard(result);
+    } catch (error) {
+        processError(error);
+    }
+}
+
+function processError(error) {
+    updateCopyStatus('Error', 'error');
+    console.error(error);
 }
 
 chrome.runtime.onMessage.addListener((message) => {
-    if (message.request === 'returnData') {
-        processData(message.result);
+    if (message.request === 'getDataSuccess') {
+        processData(message.data);
+    } else if (message.request === 'getDataError') {
+        processError(message.error);
     }
 });
 

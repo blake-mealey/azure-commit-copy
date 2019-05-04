@@ -16,10 +16,14 @@
 
     window.addEventListener('message', (event) => {
         const message = {};
-        if (event.data.type === 'builds') {
-            message.result = formatBuildsString(event.data.formatString, event.data.context);
-        } else if (event.data.type === 'commit') {
-            message.result = formatCommitString(event.data.formatString, event.data.context);
+        try {
+            if (event.data.type === 'builds') {
+                message.result = formatBuildsString(event.data.formatString, event.data.context);
+            } else if (event.data.type === 'commit') {
+                message.result = formatCommitString(event.data.formatString, event.data.context);
+            }
+        } catch (error) {
+            message.error = JSON.parse(JSON.stringify(error));
         }
         event.source.postMessage(message, event.origin);
     });
