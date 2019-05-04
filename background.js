@@ -34,28 +34,8 @@ async function formatStrings(context) {
     });
 }
 
-function getPathEnd(url) {
-    return new URL(url).pathname.split('/').reverse().find((x) => !!x);
-}
-
-async function processUrls(commitUrl, builds, pullRequest, branch) {
-    const commit = {
-        url: commitUrl,
-        hash: getPathEnd(commitUrl)
-    };
-
-    for (const build of builds) {
-        build.id = new URL(build.url).searchParams.get('buildId')
-    }
-
-    pullRequest.id = getPathEnd(pullRequest.url);
-
-    const result = await formatStrings({
-        commit,
-        builds,
-        pullRequest,
-        branch
-    });
+async function processData(context) {
+    const result = await formatStrings(context);
 
     console.log(result);
     copyToClipboard(result);
@@ -70,28 +50,16 @@ function isCommitPage(url) {
 }
 
 chrome.pageAction.onClicked.addListener((tab) => {
-    /*if (isBuildResultsPage(tab.url)) {
-        chrome.tabs.executeScript(null, {
-            code:  `var result = {
-                        commitUrl: document.querySelector('.commit-link').href
-                    };
-                    result;`
-        }, (result) => {
-            result = result[0];
-            processUrls(result.commitUrl, [{url: tab.url, name: 'BUILD_NAME'}]);
-        });
-    } else*/
-
     if (isCommitPage(tab.url)) {
         chrome.tabs.executeScript(null, {
-            file: 'getBuildUrls.js'
+            file: 'getData.js'
         });
     }
 });
 
-chrome.runtime.onMessage.addListener((message, sender) => {
-    if (message.request === 'returnBuildUrls') {
-        processUrls(sender.tab.url, message.result.builds, message.result.pullRequest, message.result.branch);
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.request === 'returnData') {
+        processData(message.result);
     }
 });
 

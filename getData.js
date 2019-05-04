@@ -41,10 +41,19 @@
         });
     }
 
+    function getPathEnd(url) {
+        return new URL(url).pathname.split('/').reverse().find((x) => !!x);
+    }
+
     const BUILD_LINK_REGEX = /^(?<name>.+) (?:build) (?<instance>.+) (?<status>\w+)$/;
 
     async function getResult() {
         const result = {};
+
+        result.commit = {
+            url: window.location.href,
+            hash: getPathEnd(window.location.href)
+        };
 
         await openPopup('.status-state', '.status-flyout-content');
         const buildLinks = Array.from(document.querySelectorAll('.status-target-url-link'));
@@ -54,6 +63,7 @@
             .map((link) => {
                 return {
                     url: link.href,
+                    id: new URL(link.href).searchParams.get('buildId'),
                     name: BUILD_LINK_REGEX.exec(link.textContent).groups.name
                 };
             });
@@ -66,11 +76,12 @@
 
         const prBadge = await getElementAsync('.pr-for-branch-badge');
         result.pullRequest = {
+            id: getPathEnd(prBadge.href),
             url: prBadge.href
         };
 
         chrome.runtime.sendMessage(null, {
-            request: 'returnBuildUrls',
+            request: 'returnData',
             result
         });
     }
