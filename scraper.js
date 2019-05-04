@@ -32,7 +32,7 @@
         return await interval(() => document.querySelector(elementSelector));
     }
 
-    async function openPopup(buttonSelector, popupSelector) {
+    async function openPopupAsync(buttonSelector, popupSelector) {
         return await interval(() => {
             if (!doesElementExist(popupSelector)) {
                 document.querySelector(buttonSelector).click();
@@ -55,7 +55,7 @@
             hash: getPathEnd(window.location.href)
         };
 
-        await openPopup('.status-state', '.status-flyout-content');
+        await openPopupAsync('.status-state', '.status-flyout-content');
         const buildLinks = Array.from(document.querySelectorAll('.status-target-url-link'));
 
         data.builds = buildLinks
