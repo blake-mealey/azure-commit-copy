@@ -7,7 +7,8 @@
 
     "page_action": {
         "default_icon": "icons/copy.png",
-        "default_title": "Azure Commit Copy"
+        "default_title": "Azure Commit Copy",
+        "default_popup": "popup/popup.html"
     },
 
     "background": {
