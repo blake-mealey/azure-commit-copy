@@ -7,7 +7,9 @@ export class Formatter {
     async formatString(formatString, context) {
         return new Promise((resolve) => {
             const iframe = document.createElement('iframe');
-            iframe.style = 'position: absolute; pointer-events: none; top: 0;';
+            iframe.style.position = 'fixed';
+            iframe.style.opacity = 0;
+            iframe.style.pointerEvents = 'none';
             iframe.src = this._sandboxPath;
 
             iframe.addEventListener('load', () => {
