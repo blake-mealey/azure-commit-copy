@@ -79,5 +79,5 @@ chrome.runtime.onMessage.addListener((message) => {
 
 updateCopyStatus('Copying...', 'grey');
 chrome.tabs.executeScript(null, {
-    file: 'getData.js'
+    file: 'scraper.js'
 });
