@@ -36,7 +36,10 @@ const previewContext = {
 let errorState;
 
 async function refreshPreviews() {
+    const buildsElement = document.getElementById('build-format-string');
     const buildsPreviewElement = document.getElementById('build-format-string-preview');
+
+    const commitElement = document.getElementById('format-string');
     const commitPreviewElement = document.getElementById('format-string-preview');
 
     const commitContext = { ...previewContext };
@@ -44,22 +47,30 @@ async function refreshPreviews() {
     errorState = false;
 
     try {
-        commitContext.buildsString = await buildsStringFormatter.formatString(document.getElementById('build-format-string').value, buildsPreviewContext);
+        commitContext.buildsString = await buildsStringFormatter.formatString(buildsElement.value, buildsPreviewContext);
         buildsPreviewElement.value = commitContext.buildsString;
+
+        buildsElement.classList.remove('bd-error');
         buildsPreviewElement.classList.remove('bd-error');
     } catch (error) {
         errorState = true;
         buildsPreviewElement.value = error;
+
+        buildsElement.classList.add('bd-error');
         buildsPreviewElement.classList.add('bd-error');
     }
 
     try {
-        const commitPreview = await commitStringFormatter.formatString(document.getElementById('format-string').value, commitContext);
+        const commitPreview = await commitStringFormatter.formatString(commitElement.value, commitContext);
         commitPreviewElement.value = commitPreview;
+
+        commitElement.classList.remove('bd-error');
         commitPreviewElement.classList.remove('bd-error');
     } catch (error) {
         errorState = true;
         commitPreviewElement.value = error;
+
+        commitElement.classList.add('bd-error');
         commitPreviewElement.classList.add('bd-error');
     }
 }
