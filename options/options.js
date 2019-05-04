@@ -34,16 +34,24 @@ const previewContext = {
 };
 
 async function refreshPreviews() {
-    const buildsPreview = await buildsStringFormatter.formatString(document.getElementById('build-format-string').value, buildsPreviewContext);
-    const commitPreview = await commitStringFormatter.formatString(document.getElementById('format-string').value, {
-        branch: previewContext.branch,
-        pullRequest: previewContext.pullRequest,
-        commit: previewContext.commit,
-        buildsString: buildsPreview
-    });
+    const buildsPreviewElement = document.getElementById('build-format-string-preview');
+    const commitPreviewElement = document.getElementById('format-string-preview');
 
-    document.getElementById('build-format-string-preview').value = buildsPreview;
-    document.getElementById('format-string-preview').value = commitPreview;
+    const commitContext = { ...previewContext };
+
+    try {
+        commitContext.buildsString = await buildsStringFormatter.formatString(document.getElementById('build-format-string').value, buildsPreviewContext);
+        buildsPreviewElement.value = commitContext.buildsString;
+    } catch (error) {
+        buildsPreviewElement.value = error;
+    }
+
+    try {
+        const commitPreview = await commitStringFormatter.formatString(document.getElementById('format-string').value, commitContext);
+        commitPreviewElement.value = commitPreview;
+    } catch (error) {
+        commitPreviewElement.value = error;
+    }
 }
 
 function restoreOptions() {
@@ -91,8 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('save').addEventListener('click', saveOptions);
     document.getElementById('reset').addEventListener('click', resetOptions);
 
-    document.getElementById('build-format-string').addEventListener('change', refreshPreviews);
-    document.getElementById('build-format-string').addEventListener('keydown', refreshPreviews);
-    document.getElementById('format-string').addEventListener('change', refreshPreviews);
-    document.getElementById('format-string').addEventListener('keydown', refreshPreviews);
+    document.getElementById('build-format-string').addEventListener('input', refreshPreviews);
+    document.getElementById('format-string').addEventListener('input', refreshPreviews);
 });

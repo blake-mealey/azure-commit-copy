@@ -93,7 +93,7 @@
         } catch (error) {
             chrome.runtime.sendMessage(null, {
                 request: 'getDataError',
-                error: JSON.parse(JSON.stringify(error))
+                error: error.message
             });
         }
     }

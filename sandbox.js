@@ -23,7 +23,7 @@
                 message.result = formatCommitString(event.data.formatString, event.data.context);
             }
         } catch (error) {
-            message.error = JSON.parse(JSON.stringify(error));
+            message.error = error.message;
         }
         event.source.postMessage(message, event.origin);
     });
