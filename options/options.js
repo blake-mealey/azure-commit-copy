@@ -33,24 +33,34 @@ const previewContext = {
     }
 };
 
+let errorState;
+
 async function refreshPreviews() {
     const buildsPreviewElement = document.getElementById('build-format-string-preview');
     const commitPreviewElement = document.getElementById('format-string-preview');
 
     const commitContext = { ...previewContext };
 
+    errorState = false;
+
     try {
         commitContext.buildsString = await buildsStringFormatter.formatString(document.getElementById('build-format-string').value, buildsPreviewContext);
         buildsPreviewElement.value = commitContext.buildsString;
+        buildsPreviewElement.classList.remove('bd-error');
     } catch (error) {
+        errorState = true;
         buildsPreviewElement.value = error;
+        buildsPreviewElement.classList.add('bd-error');
     }
 
     try {
         const commitPreview = await commitStringFormatter.formatString(document.getElementById('format-string').value, commitContext);
         commitPreviewElement.value = commitPreview;
+        commitPreviewElement.classList.remove('bd-error');
     } catch (error) {
+        errorState = true;
         commitPreviewElement.value = error;
+        commitPreviewElement.classList.add('bd-error');
     }
 }
 
@@ -82,6 +92,11 @@ function updateSaveStatus(text, state) {
 }
 
 function saveOptions() {
+    if (errorState) {
+        updateSaveStatus('Fix errors before saving', 'error');
+        return;
+    }
+
     const buildFormatString = document.getElementById('build-format-string').value;
     const formatString = document.getElementById('format-string').value;
 
