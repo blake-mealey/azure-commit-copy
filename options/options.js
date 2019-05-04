@@ -6,31 +6,31 @@ const buildsStringFormatter = new Formatter('builds', sandboxPath);
 const commitStringFormatter = new Formatter('commit', sandboxPath);
 
 const buildsPreviewContext = [
-  {
-    url: "https://example.com/build/89762",
-    name: "Client",
-    id: "89762"
-  },
-  {
-    url: "https://example.com/build/89775",
-    name: "Server",
-    id: "89775"
-  }
+    {
+        url: "https://example.com/build/89762",
+        name: "Client",
+        id: "89762"
+    },
+    {
+        url: "https://example.com/build/89775",
+        name: "Server",
+        id: "89775"
+    }
 ];
 
 const previewContext = {
-  branch: {
-    url: "https://example.com/repo/master",
-    name: "master"
-  },
-  pullRequest: {
-    url: "https://example.com/pr/1000",
-    id: "1000"
-  },
-  commit: {
-    url: "https://example.com/commit/421532a",
-    hash: "421532a"
-  }
+    branch: {
+        url: "https://example.com/repo/master",
+        name: "master"
+    },
+    pullRequest: {
+        url: "https://example.com/pr/1000",
+        id: "1000"
+    },
+    commit: {
+        url: "https://example.com/commit/421532a",
+        hash: "421532a"
+    }
 };
 
 async function refreshPreviews() {
@@ -62,20 +62,26 @@ function resetOptions() {
     document.getElementById('format-string').value = DEFAULT_FORMAT_STRING;
 }
 
+function updateSaveStatus(text, state) {
+    const saveStatusElement = document.getElementById('save-status');
+    saveStatusElement.textContent = text;
+    saveStatusElement.className = '';
+    saveStatusElement.classList.add('tag', `bd-${state}`, `text-${state}`);
+
+    setTimeout(() => {
+        saveStatusElement.classList.add('is-hidden');
+    }, 2000);
+}
+
 function saveOptions() {
     const buildFormatString = document.getElementById('build-format-string').value;
     const formatString = document.getElementById('format-string').value;
-    
+
     chrome.storage.sync.set({
         buildFormatString,
         formatString
     }, () => {
-        console.log('saved settings');
-        const saveBanner = document.getElementById('save-banner');
-        saveBanner.classList.remove('is-hidden');
-        setTimeout(() => {
-            saveBanner.classList.add('is-hidden');
-        }, 1000);
+        updateSaveStatus('Saved!', 'success');
     });
 }
 
