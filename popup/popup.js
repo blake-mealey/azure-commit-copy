@@ -50,7 +50,7 @@ async function formatStrings(context) {
 async function processData(context) {
     const result = await formatStrings(context);
 
-    updateCopyStatus('Copied', 'success');
+    updateCopyStatus('Copied!', 'success');
 
     console.log(result);
     copyToClipboard(result);
