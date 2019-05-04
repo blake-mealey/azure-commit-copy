@@ -1,4 +1,50 @@
 import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING } from '../modules/constants.js';
+import { Formatter } from '../modules/formatter.js';
+
+const sandboxPath = '../sandbox.html';
+const buildsStringFormatter = new Formatter('builds', sandboxPath);
+const commitStringFormatter = new Formatter('commit', sandboxPath);
+
+const buildsPreviewContext = [
+  {
+    url: "https://example.com/build/89762",
+    name: "Client",
+    id: "89762"
+  },
+  {
+    url: "https://example.com/build/89775",
+    name: "Server",
+    id: "89775"
+  }
+];
+
+const previewContext = {
+  branch: {
+    url: "https://example.com/repo/master",
+    name: "master"
+  },
+  pullRequest: {
+    url: "https://example.com/pr/1000",
+    id: "1000"
+  },
+  commit: {
+    url: "https://example.com/commit/421532a",
+    hash: "421532a"
+  }
+};
+
+async function refreshPreviews() {
+    const buildsPreview = await buildsStringFormatter.formatString(document.getElementById('build-format-string').value, buildsPreviewContext);
+    const commitPreview = await commitStringFormatter.formatString(document.getElementById('format-string').value, {
+        branch: previewContext.branch,
+        pullRequest: previewContext.pullRequest,
+        commit: previewContext.commit,
+        buildsString: buildsPreview
+    });
+
+    document.getElementById('build-format-string-preview').value = buildsPreview;
+    document.getElementById('format-string-preview').value = commitPreview;
+}
 
 function restoreOptions() {
     chrome.storage.sync.get({
@@ -7,6 +53,7 @@ function restoreOptions() {
     }, (items) => {
         document.getElementById('build-format-string').value = items.buildFormatString;
         document.getElementById('format-string').value = items.formatString;
+        refreshPreviews();
     });
 }
 
@@ -37,4 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('save').addEventListener('click', saveOptions);
     document.getElementById('reset').addEventListener('click', resetOptions);
+
+    document.getElementById('build-format-string').addEventListener('change', refreshPreviews);
+    document.getElementById('build-format-string').addEventListener('keydown', refreshPreviews);
+    document.getElementById('format-string').addEventListener('change', refreshPreviews);
+    document.getElementById('format-string').addEventListener('keydown', refreshPreviews);
 });
