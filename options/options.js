@@ -1,4 +1,4 @@
-import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING } from './modules/constants.js';
+import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING } from '../modules/constants.js';
 
 function restoreOptions() {
     chrome.storage.sync.get({
