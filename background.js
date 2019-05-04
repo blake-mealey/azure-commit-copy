@@ -1,4 +1,5 @@
 import { DEFAULT_BUILD_FORMAT_STRING, DEFAULT_FORMAT_STRING, BUILD_URL_REGEX, COMMIT_URL_REGEX } from './modules/constants.js';
+import { Formatter } from './modules/formatter.js';
 
 function copyToClipboard(text) {
     const input = document.createElement('textarea');
@@ -11,32 +12,8 @@ function copyToClipboard(text) {
     document.body.removeChild(input);
 };
 
-async function formatStringInSandbox(type, formatString, context) {
-    return new Promise((resolve) => {
-        const iframe = document.createElement('iframe');
-        iframe.src = 'sandbox.html';
-
-        iframe.addEventListener('load', () => {
-            const message = {
-                type,
-                formatString,
-                context
-            };
-            iframe.contentWindow.postMessage(message, '*');
-        });
-
-        const responseHandler = (event) => {
-            if (event.source !== iframe.contentWindow) { return; }
-
-            resolve(event.data.result);
-
-            window.removeEventListener('message', responseHandler);
-        };
-        window.addEventListener('message', responseHandler);
-
-        document.body.appendChild(iframe);
-    });
-}
+const buildsStringFormatter = new Formatter('builds');
+const commitStringFormatter = new Formatter('commit');
 
 async function formatStrings(context) {
     return new Promise((resolve) => {
@@ -44,8 +21,8 @@ async function formatStrings(context) {
             buildFormatString: DEFAULT_BUILD_FORMAT_STRING,
             formatString: DEFAULT_FORMAT_STRING
         }, async (items) => {
-            const buildsString = await formatStringInSandbox('builds', items.buildFormatString, context.builds);
-            const result = await formatStringInSandbox('commit', items.formatString, {
+            const buildsString = await buildsStringFormatter.formatString(items.buildFormatString, context.builds);
+            const result = await commitStringFormatter.formatString(items.formatString, {
                 branch: context.branch,
                 pullRequest: context.pullRequest,
                 commit: context.commit,
