@@ -54,6 +54,7 @@
             url: window.location.href,
             hash: getPathEnd(window.location.href)
         };
+        data.commit.shortHash = data.commit.hash.substr(0, 8);
 
         await openPopupAsync('.status-state', '.status-flyout-content');
         const buildLinks = Array.from(document.querySelectorAll('.status-target-url-link'));

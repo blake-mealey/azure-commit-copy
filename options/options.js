@@ -28,8 +28,9 @@ const previewContext = {
         id: "1000"
     },
     commit: {
-        url: "https://example.com/commit/421532a",
-        hash: "421532a"
+        url: "https://example.com/commit/421532a421532a421532a",
+        shortHash: "421532a4",
+        hash: "421532a421532a421532a"
     }
 };
 

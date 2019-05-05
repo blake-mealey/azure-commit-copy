@@ -1,6 +1,6 @@
 export const DEFAULT_FORMAT_STRING = `Committed to [\${branch.name}|\${branch.url}]:
 * Pull Request: [\${pullRequest.id}|\${pullRequest.url}]
-* Commit: [\${commit.hash}|\${commit.url}]
+* Commit: [\${commit.shortHash}|\${commit.url}]
 \${buildsString}`;
 
 export const DEFAULT_BUILD_FORMAT_STRING = `* \${build.name} Build: [\${build.id}|\${build.url}]\n`;
