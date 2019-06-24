@@ -45,7 +45,7 @@
         return new URL(url).pathname.split('/').reverse().find((x) => !!x);
     }
 
-    const BUILD_LINK_REGEX = /^(?<name>.+) (?:build) (?<instance>.+) (?<status>\w+)$/;
+    const BUILD_LINK_REGEX = /^(?<name>.+) (?:build) (?<instance>.+ )?(?<status>\w+)$/;
 
     async function getData() {
         const data = {};
