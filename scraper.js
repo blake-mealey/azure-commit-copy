@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function interval(callback, timeout = 500, maxTries = 10) {
+    function interval(callback, timeout = 500, maxTries = 5) {
         return new Promise((resolve, reject) => {
             let tries = 0;
             const runCallback = function (intervalId) {
@@ -69,17 +69,28 @@
                 };
             });
 
-        const branchBadge = await getElementAsync('.branch-stats-badge');
-        data.branch = {
-            url: branchBadge.href,
-            name: branchBadge.querySelector('.stat-text').textContent
-        };
+        // Sometimes, there is a handy branch and PR badge available to us. Use that if we can because
+        // it's faster. If it's not there, use the slower PR dropdown
+        let branchBadge, prBadge;
+        try {
+            branchBadge = await getElementAsync('.branch-stats-badge');
+            prBadge = await getElementAsync('.pr-for-branch-badge');
+        } catch {
+            await openPopupAsync('.associated-pull-requests-flyout .stat-badge', '.pullrequest-list');
+            branchBadge = await getElementAsync('.vc-pullrequest-detail-branch-name');
+            prBadge = await getElementAsync('.pullrequest-list .ms-Link');
+        } finally {
+            const textNode = branchBadge.querySelector('.stat-text');
+            data.branch = {
+                url: branchBadge.href,
+                name: textNode ? textNode.textContent : branchBadge.textContent
+            };
 
-        const prBadge = await getElementAsync('.pr-for-branch-badge');
-        data.pullRequest = {
-            id: getPathEnd(prBadge.href),
-            url: prBadge.href
-        };
+            data.pullRequest = {
+                id: getPathEnd(prBadge.href),
+                url: prBadge.href
+            };
+        }
 
         return data;
     }
